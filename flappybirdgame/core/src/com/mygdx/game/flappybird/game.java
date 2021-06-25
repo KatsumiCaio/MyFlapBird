@@ -29,14 +29,15 @@ public class game extends ApplicationAdapter {
     private float posicaoCanoVertical;
     private float posicaoCanoHorizontal;
     private float espacoEntreCanos;
-    private float larguraDispositivo;//variavel para a largura da tela
-    private float alturaDispositivo;//variavel para a altura da tela
-    private Texture fundo;
-    private Texture[] passaros;//variavel do passaro e para a animação
-    private Texture canoBaixo;
-    private Texture canoTopo;
-    private int gravidade = 0;//variavel da gravidade para a movimentação
-    private int pontos = 0;//variavel do score
+
+    private float larguraDispositivo;//variaveis para a largura da tela
+    private float alturaDispositivo; //variaveis para a altura da tela
+    private Texture fundo; // textura do fundo
+    private Texture[] passaros; // texturas para o pássaro
+    private Texture canoBaixo;//textura para os canos de baixo
+    private Texture canoTopo;//textura para os canos de cima
+    private int gravidade = 0;//variaveis para a movimentação por base da gravidade
+    private int pontos = 0; //variaveis dos pontos
 
 
     @Override
@@ -75,19 +76,22 @@ public class game extends ApplicationAdapter {
     private void desenharTexturas() {
 
         batch.begin();
-        batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);//definindo a largura e a altura da tela com o Background
-        batch.draw(passaros[(int) variacao], 50, posicaoInicialVerticalPassaro);//Definindo que o passáro ficara no meio da tela
-        batch.draw(canoBaixo, posicaoCanoHorizontal, alturaDispositivo / 2 - canoBaixo.getHeight() - espacoEntreCanos / 2 + posicaoCanoVertical);//colocando os canos de baixo
-        batch.draw(canoTopo, posicaoCanoHorizontal, alturaDispositivo / 2 + espacoEntreCanos / 2 + posicaoCanoVertical);//colocando os canos de cima
-        textoPontuacao.draw(batch, String.valueOf(pontos), larguraDispositivo / 2, alturaDispositivo - 100);//fazendo a pontuação aparecer na tela
+        //criando o background com o tamanho da tela
+        batch.draw(fundo, 0, 0, larguraDispositivo, alturaDispositivo);
+        //criando e definindo que o passáro está está no centro da tela
+        batch.draw(passaros[(int) variacao], 50, posicaoInicialVerticalPassaro);
+        //parte para a criação dos canos
+        batch.draw(canoBaixo, posicaoCanoHorizontal, alturaDispositivo / 2 - canoBaixo.getHeight() - espacoEntreCanos / 2 + posicaoCanoVertical);
+        batch.draw(canoTopo, posicaoCanoHorizontal, alturaDispositivo / 2 + espacoEntreCanos / 2 + posicaoCanoVertical);
+        textoPontuacao.draw(batch, String.valueOf(pontos), larguraDispositivo / 2, alturaDispositivo - 100);
         batch.end();
     }
 
     private void validarPontos() {
 
-
+        //verificar se o pássaro passou pelo cano
         if(posicaoCanoHorizontal < 50 - passaros[0].getWidth()){
-            if(!passouCano){// verificando se o passáro passou pelo cano
+            if(!passouCano){
                 pontos++;
                 passouCano = true;
             }
@@ -102,24 +106,25 @@ public class game extends ApplicationAdapter {
             posicaoCanoVertical = random.nextInt(400) - 200;
             passouCano = false;
         }
+
         boolean toqueTela = Gdx.input.justTouched();
 
-
-        if(Gdx.input.justTouched()){//fazendo o passaro voar ao clicar na tel
+        //para funcionar que o pássaro pule
+        if(Gdx.input.justTouched()){
             gravidade = -25;
         }
 
         if(posicaoInicialVerticalPassaro > 0 || toqueTela)
             posicaoInicialVerticalPassaro -= gravidade;
 
-
-        variacao += Gdx.graphics.getDeltaTime() * 10;//criando a animação do passáro voando
+        //criando a animação do pássaro voando
+        variacao += Gdx.graphics.getDeltaTime() * 10;
 
 
         if(variacao > 3)
             variacao = 0;
 
-
+        //Adicionando a gravidade
         gravidade++;
     }
 
@@ -127,7 +132,7 @@ public class game extends ApplicationAdapter {
 
         batch = new SpriteBatch();
         random = new Random();
-
+        //adicionando o tamanho da tela
         larguraDispositivo = Gdx.graphics.getWidth();
         alturaDispositivo = Gdx.graphics.getHeight();
 
@@ -142,13 +147,15 @@ public class game extends ApplicationAdapter {
 
     private void inicializaTexturas() {
 
-        passaros = new Texture[3];//colocando as texturas do passáro
+        passaros = new Texture[3];
+        //adicionando a textura do pássaro
         passaros[0] = new Texture("passaro1.png");
         passaros[1] = new Texture("passaro2.png");
         passaros[2] = new Texture("passaro3.png");
-        fundo = new Texture("fundo.png");//colocando a textura do background
-        canoBaixo = new Texture("cano_baixo_maior.png");//colocado a textura do cano de baixo
-        canoTopo = new Texture("cano_topo_maior.png");//colocado a textura do cano de cima
+        //definindo o fundo com a textura que esta na pasta assets
+        fundo = new Texture("fundo.png");
+        canoBaixo = new Texture("cano_baixo_maior.png");
+        canoTopo = new Texture("cano_topo_maior.png");
     }
 
     @Override
